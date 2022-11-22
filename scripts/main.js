@@ -1,26 +1,45 @@
 let playerCountWins = 0;
 let computerCountWins = 0;
+let btns = document.querySelectorAll('.btns');
+let output = document.querySelector('#output');
 
-game();
 
-function game() {
-    const playerRoundCount = 5;
-    for (let i = 0; i < playerRoundCount; i++){
-        let round = playRound(getComptuerChoice(),playerSelections());
-        console.log(round);  
-    }
-    console.log("Game of 5 rounds has ended");
-    if (playerCountWins > computerCountWins){
-        console.log(`Player have won ${playerCountWins} to ${computerCountWins}.`);
-    } else console.log(`Computer have won ${computerCountWins} to ${playerCountWins}.`);
+btns.forEach(button => {
+    button.addEventListener('click', getChoose);
+})
+
+
+function getChoose(e){
+    if (computerCountWins >= 5 || playerCountWins >= 5){button.removeEventListener('click',getChoose);}
+    let div = document.createElement('div');
+    div.textContent = playRound(getComptuerChoice(),e.target.textContent);
+    div.textContent += ` Player result:${playerCountWins} | Computer result:${computerCountWins}`
+    output.appendChild(div);
+    getResultMessage();
 }
+
+
+function getResultMessage() {
+    if (playerCountWins === 5 && computerCountWins === 5){
+      let divResult = document.createElement('div');
+      divResult.textContent = `It's a tie ${computerCountWins} to ${playerCountWins}.`;
+      output.appendChild(divResult);
+    } else if (computerCountWins >= 5) {
+        let divResult = document.createElement('div');
+        divResult.textContent = `Computer have won ${computerCountWins} to ${playerCountWins}.`;
+        output.appendChild(divResult);
+    } else if(playerCountWins >= 5){
+        let divResult = document.createElement('div');
+        divResult.textContent = `Player have won ${playerCountWins} to ${computerCountWins}.`;
+        output.appendChild(divResult);
+    }}
 
 
 function playRound(getComptuerChoice, playerSelections) {
     if (getComptuerChoice.toUpperCase() === playerSelections.toUpperCase()){
         playerCountWins++;
         computerCountWins++;
-        return  `You tied! ${getComptuerChoice} equal ${playerSelections.slice(0,1)+playerSelections.slice(1).toLowerCase()}.`;
+        return `You tied! ${getComptuerChoice} equal ${playerSelections.slice(0,1)+playerSelections.slice(1).toLowerCase()}.`;
 
     } else if (getComptuerChoice === 'Rock'){
         if (playerSelections.toUpperCase() === 'PAPER'){
@@ -58,10 +77,5 @@ function getComptuerChoice() {
     } else if (computerChoice === 2){
         return 'Paper';
     } else return 'Scissors';
-}
-
-function playerSelections() {
-    let playerChoice = prompt('Select from Rock, Paper, Scissors (game of 5 rounds)','');
-    return playerChoice;
 }
 
